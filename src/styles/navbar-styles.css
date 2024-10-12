@@ -1,0 +1,62 @@
+/* Animación del gradiente */
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Fondo con gradiente para Modo Claro */
+.bg-gradient-light {
+  background: linear-gradient(
+    120deg,
+    rgba(236, 240, 241, 0.8),   /* Gris claro */
+    rgba(189, 195, 199, 0.7),   /* Gris suave */
+    rgba(174, 214, 241, 0.6),   /* Azul claro */
+    rgba(133, 193, 233, 0.6)    /* Azul cielo */
+  );
+  background-size: 200% 200%;
+  transition: background 3s ease-in-out;
+}
+
+
+/* Fondo con gradiente para Modo Oscuro */
+.bg-gradient-dark {
+  background: linear-gradient(
+    120deg,
+    rgba(52, 73, 94, 0.8),    /* Gris oscuro */
+    rgba(44, 62, 80, 0.7),    /* Gris medio */
+    rgba(52, 152, 219, 0.6),  /* Azul oscuro */
+    rgba(41, 128, 185, 0.6)   /* Azul noche */
+  );
+  background-size: 200% 200%;
+  transition: background 3s ease-in-out;
+}
+
+/* Animación aplicada */
+.animate-background {
+  animation: gradientShift 5s ease-in-out infinite alternate;
+}
+
+/* Estilo personalizado para el shake */
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-5px, -5px); }
+  20% { transform: translate(5px, 5px); }
+  30% { transform: translate(-5px, 5px); }
+  40% { transform: translate(5px, -5px); }
+  50% { transform: translate(-5px, -5px); }
+  60% { transform: translate(5px, 5px); }
+  70% { transform: translate(-5px, 5px); }
+  80% { transform: translate(5px, -5px); }
+  90% { transform: translate(-5px, -5px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Clase de animación para Tailwind */
+.shake-hover:hover {
+  animation: shake 2s ease-in-out; /* Duración de la animación y su tipo */
+}

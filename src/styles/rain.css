@@ -1,0 +1,35 @@
+/* src/styles/Rain.css */
+.rain-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Permite interacción con otros elementos */
+  overflow: hidden; /* Oculta gotas que caen fuera del contenedor */
+  z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.drop {
+  position: absolute;
+  top: -10px;
+  width: 2px;
+  height: 10px;
+  animation: fall linear infinite;
+}
+
+/* Estilos para modo claro */
+.light-mode .drop {
+  background-color: rgba(0, 102, 204, 0.5); /* Celeste  */
+}
+
+/* Estilos para modo oscuro */
+.dark-mode .drop {
+  background-color: rgba(200, 200, 200, 0.5); /* Gris  */
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh);
+  }
+}

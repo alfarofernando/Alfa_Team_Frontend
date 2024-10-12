@@ -1,0 +1,27 @@
+/* Modo Claro */
+.light-mode {
+  background-color: #f7fafc; /* Color de fondo claro */
+}
+
+/* Modo Oscuro */
+.dark-mode {
+  background-color: #000000; /* Color de fondo oscuro */
+}
+
+/* Clase general para el fondo que se extiende */
+.full-background {
+  position: fixed; /* Mantiene el fondo fijo en la ventana */
+  top: 0; /* Desde la parte superior */
+  left: 0; /* Desde la parte izquierda */
+  height: 100vh; /* Altura completa de la ventana */
+  width: 100%; /* Ancho completo */
+  z-index: -1; /* Detrás del contenido */
+}
+
+/* Clase para el contenido que permite scroll */
+.scroll-background {
+  overflow-y: scroll; /* Permite desplazamiento vertical */
+  /*padding-bottom: 100px; /* Espacio inferior para el footer */
+  overflow-x: hidden;
+}
+
