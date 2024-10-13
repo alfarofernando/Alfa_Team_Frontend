@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 export default function Rain() {
-  const dropsCount = 35; // Número de gotas de lluvia
+  const dropsCount = 0; // Número de gotas de lluvia
   const { darkMode } = useContext(ThemeContext);
   const [visible, setVisible] = useState(false); // Estado para controlar la visibilidad
   const [drops, setDrops] = useState([]); // Estado para almacenar las gotas

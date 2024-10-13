@@ -29,58 +29,21 @@ export default function Navbar() {
 
   if (user && user.isAdmin === true) {
     dashboardLink = (
-      <>
+      
         <NavLink to="/AdminDashboard" className={linkStyles}>
-          Admin Dashboard
+          Dashboard
         </NavLink>
-        <button
-          onClick={logout}
-          className="items-center p-2 mx-2 text-white rounded-full hover:bg-red-200"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="red" // Cambiar a rojo
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13 16l4-4m0 0l-4-4m4 4H7m4 4h4a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2h4"
-            />
-          </svg>
-        </button>
-      </>
+     
     );
   } else if (user && user.isAdmin === false) {
     dashboardLink = (
-      <>
+      
         <NavLink to="/AdminDashboard" className={linkStyles}>
-          User Dashboard
+          Dashboard
         </NavLink>
-        <button
-          onClick={logout}
-          className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          <span className="mr-2">Cerrar sesión</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="red" // Cambiar a rojo
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13 16l4-4m0 0l-4-4m4 4H7m4 4h4a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2h4"
-            />
-          </svg>
-        </button>
-      </>
+        
+       
+      
     );
   } else {
     dashboardLink = (
@@ -217,7 +180,7 @@ export default function Navbar() {
           </div>
 
           {/* Links para pantallas grandes */}
-          <div className="hidden lg:flex space-x-10 m-2 rounded">
+          <div className="hidden lg:flex space-x-8 m-2 rounded">
             <ul className="flex space-x-4">
               <li>
                 <NavLink to="/" className={linkStyles}>
@@ -244,11 +207,30 @@ export default function Navbar() {
                   Contacto
                 </NavLink>
               </li>
-            </ul>
-          </div>
-          <ul className="flex space-x-4">
+              
             <li>{dashboardLink}</li>
-          </ul>
+            <li><button
+          onClick={logout}
+          className="items-center mx-2 text-white rounded-full hover:bg-red-200 transition ease-in-out  hover:scale-150"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="red" // Cambiar a rojo
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M13 16l4-4m0 0l-4-4m4 4H7m4 4h4a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2h4"
+            />
+          </svg></button></li>
+            </ul>
+            
+          </div>
+          
         </div>
       </nav>
     </>

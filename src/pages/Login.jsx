@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import {useNavigate} from "react-router-dom";
 import { useAuth } from "../context/UserAuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import Footer from "../components/Footer";
@@ -7,7 +8,7 @@ import { verificarUsuario } from "../utils/dummy_login_data";
 export default function Login() {
   const { darkMode } = useContext(ThemeContext);
   const { login } = useAuth();
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,13 +21,12 @@ export default function Login() {
     if (user) {
       login(user.username, user.isAdmin);
       if (user.isAdmin) {
-        alert(`Bienvenido, administrador ${user.username}`);
-        // Redirigir al dashboard de admin si es necesario
-        // Ejemplo: window.location.href = "/admin-dashboard";
+       
+        navigate("/AdminDashboard");
+        
       } else {
-        alert(`Bienvenido, ${user.username}`);
-        // Redirigir a la página de usuario regular
-        // Ejemplo: window.location.href = "/dashboard";
+        
+        navigate("/UserDashboard"); 
       }
     } else {
       alert("Credenciales Incorrectas");
@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="relative overflow-hidden z-10 py-8 my-8">
+      <div className="relative overflow-hidden z-10 py-8 my-8 ">
         <div className="flex items-center justify-center">
           <div
             className={`relative w-2/3 px-10 py-5 rounded-lg shadow-lg content-center ${

@@ -1,38 +1,26 @@
-import { useContext } from "react";
-import Footer from "../components/Footer";
-import { ThemeContext } from "../context/ThemeContext";
+// src/pages/Cursos.jsx
 
-export default function Cursos() {
-  const { darkMode } = useContext(ThemeContext);
+import React from 'react';
+import dummy_course_data from '../utils/dummy_course_data';
+import { useNavigate } from 'react-router-dom';
+
+const Cursos = () => {
+  const navigate = useNavigate();
+
+  const handleCourseClick = (courseId) => {
+    navigate(`/curso/${courseId}`);
+  };
 
   return (
-    <>
-      <div
-        className={`relative overflow-hidden z-10 py-4 my-4 ${
-          darkMode ? "bg-dark text-white" : "bg-gray-100 text-black"
-        }`}
-      >
-        <h1 className="text-center">CURSOS</h1>
-        <p className="my-4 py-4">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero
-          tempora tempore harum modi voluptate ea soluta aspernatur fuga
-          veritatis omnis vel dolores saepe nesciunt mollitia possimus facere,
-          itaque laudantium cum.
-        </p>
-        <p className="my-4 py-4">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero
-          tempora tempore harum modi voluptate ea soluta aspernatur fuga
-          veritatis omnis vel dolores saepe nesciunt mollitia possimus facere,
-          itaque laudantium cum.
-        </p>
-        <p className="my-4 py-4">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero
-          tempora tempore harum modi voluptate ea soluta aspernatur fuga
-          veritatis omnis vel dolores saepe nesciunt mollitia possimus facere,
-          itaque laudantium cum.
-        </p>
-      </div>
-      <Footer />
-    </>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {dummy_course_data.map((course) => (
+        <div key={course.id} className="p-4 border rounded shadow" onClick={() => handleCourseClick(course.id)}>
+          <h3 className="font-bold">{course.title}</h3>
+          <p>{course.description}</p>
+        </div>
+      ))}
+    </div>
   );
-}
+};
+
+export default Cursos;
