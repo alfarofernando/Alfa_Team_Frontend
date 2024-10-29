@@ -15,7 +15,15 @@ const AdminDashboard = () => {
   };
 
   const handleViewCourses = () => {
-    navigate("/admin/course-list"); // Navega a la lista de cursos
+    navigate("/admin/course-list");
+  };
+
+  const handleManageLessonAccess = () => {
+    navigate("/admin/manage-lesson-access");
+  };
+
+  const handleViewReports = () => {
+    navigate("/admin/reports"); // Navegar al componente de reportes
   };
 
   return (
@@ -25,14 +33,23 @@ const AdminDashboard = () => {
         <p className="text-gray-700 mb-8">Hola, {user.username}. Administra los recursos del sitio.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <button onClick={handleViewCourses} className="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg">
+          <button onClick={handleViewCourses} className="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg">
             Ver Cursos
           </button>
           <button className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg">
             Ver Retos
           </button>
-          <button className="bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg">
+          <button
+            onClick={handleViewReports}
+            className="bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg"
+          >
             Reportes
+          </button>
+          <button
+            onClick={handleManageLessonAccess}
+            className="bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg"
+          >
+            Administrar Acceso a Lecciones
           </button>
         </div>
 
@@ -45,5 +62,6 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
-}
+};
+
 export default AdminDashboard;

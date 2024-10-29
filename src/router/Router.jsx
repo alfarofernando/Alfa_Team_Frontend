@@ -6,24 +6,27 @@ import Nosotros from "../pages/Nosotros";
 import Cursos from "../pages/Cursos.jsx";
 import AdminCourseList from "../pages/AdminCourseList";
 import CourseDetail from "../pages/CourseDetail";
-import AddCourse from '../pages/AddCourse';
-import EditCourse from '../pages/EditCourse';
+import AddCourse from "../pages/AddCourse";
+import EditCourse from "../pages/EditCourse";
 import Retos from "../pages/Retos.jsx";
 import Contacto from "../pages/Contacto.jsx";
-import {useAuth} from "../context/UserAuthContext";
+import { useAuth } from "../context/UserAuthContext";
 import ProtectedRoutes from "../components/ProtectedRoutes.jsx";
 import Login from "../pages/Login.jsx";
+import Registro from "../pages/Registro.jsx";
 import AdminDashboard from "../pages/AdminDashboard";
 import UserDashboard from "../pages/UserDashboard";
+import ManageLessonAccess from "../pages/ManageLessonAccess";
+import Reports from "../pages/Reports.jsx";
 
 export default function AppRouter() {
-const {user} = useAuth();
-const addCourse = (course) => {
-  // Lógica para añadir curso
-};
-const updateCourse= (courses) => {
-   // Lógica para modificar curso
-}
+  const { user } = useAuth();
+  const addCourse = (course) => {
+    // Lógica para añadir curso
+  };
+  const updateCourse = (courses) => {
+    // Lógica para modificar curso
+  };
 
   return (
     <Routes>
@@ -68,18 +71,33 @@ const updateCourse= (courses) => {
           </BlurSlideTransition>
         }
       />
-       <Route path="/curso/:courseId" element={<BlurSlideTransition><CourseDetail /></BlurSlideTransition>} />
+      <Route
+        path="/curso/:courseId"
+        element={
+          <BlurSlideTransition>
+            <CourseDetail />
+          </BlurSlideTransition>
+        }
+      />
       {/* RUTAS PROTEGIDAS */}
       {/* ruta habilitada solo si no hay un usuario logeado */}
       <Route
-  path="/Login"
-  element={
-    <BlurSlideTransition>
-      <Login />
-    </BlurSlideTransition>
-  }
-/>
-       {/* ruta hablitada solo para usuarios !admin */}
+        path="/Login"
+        element={
+          <BlurSlideTransition>
+            <Login />
+          </BlurSlideTransition>
+        }
+      />
+      <Route
+        path="/registro"
+        element={
+          <BlurSlideTransition>
+            <Registro />
+          </BlurSlideTransition>
+        }
+      />
+      {/* ruta hablitada solo para usuarios !admin */}
       <Route element={<ProtectedRoutes />}>
         <Route
           path="/UserDashboard"
@@ -90,7 +108,7 @@ const updateCourse= (courses) => {
           }
         />
       </Route>
-{/* Ruta habilitada solo para usuarios admin */}
+      {/* Ruta habilitada solo para usuarios admin */}
       <Route element={<ProtectedRoutes adminOnly />}>
         <Route
           path="/AdminDashboard"
@@ -100,14 +118,22 @@ const updateCourse= (courses) => {
             </BlurSlideTransition>
           }
         />
-        
-      <Route path="/admin/add-course" element={<AddCourse addCourse={addCourse} />} />
-      <Route path="/admin/course-list" element={<AdminCourseList />} /> {/* Ruta para ver cursos */}
-      <Route path="/admin/edit-course/:courseId" element={<EditCourse updateCourse={updateCourse} />} />
-      
+        <Route
+          path="/admin/add-course"
+          element={<AddCourse addCourse={addCourse} />}
+        />
+        <Route path="/admin/course-list" element={<AdminCourseList />} />{" "}
+        {/* Ruta para ver cursos */}
+        <Route
+          path="/admin/edit-course/:courseId"
+          element={<EditCourse updateCourse={updateCourse} />}
+        />
+        <Route
+          path="/admin/manage-lesson-access"
+          element={<ManageLessonAccess />}
+        />
+        <Route path="/admin/reports" element={<Reports />} />
       </Route>
-      
-      
     </Routes>
   );
 }

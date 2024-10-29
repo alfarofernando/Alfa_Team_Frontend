@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/UserAuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import Footer from "../components/Footer";
@@ -15,19 +15,11 @@ export default function Login() {
   const inputClasses =
     "w-full p-2 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 placeholder-stone-400 focus:outline-none focus:border-stone-600 transition-colors duration-300";
 
-  // Función que maneja el intento de inicio de sesión
   const handleLogin = async () => {
-    const user = await verificarUsuario(email, password); // Intentamos verificar el usuario
+    const user = await verificarUsuario(email, password);
     if (user) {
       login(user.username, user.isAdmin);
-      if (user.isAdmin) {
-       
-        navigate("/AdminDashboard");
-        
-      } else {
-        
-        navigate("/UserDashboard"); 
-      }
+      navigate(user.isAdmin ? "/AdminDashboard" : "/UserDashboard");
     } else {
       alert("Credenciales Incorrectas");
     }
@@ -35,14 +27,14 @@ export default function Login() {
 
   return (
     <>
-      <div className="relative overflow-hidden z-10 py-8 my-8 ">
+      <div className="relative overflow-hidden z-10 py-8 my-8">
         <div className="flex items-center justify-center">
           <div
-            className={`relative w-2/3 px-10 py-5 rounded-lg shadow-lg content-center ${
+            className={`relative w-2/3 px-10 py-5 rounded-lg shadow-lg ${
               darkMode
-                ? "shadow-stone-700  hover:shadow-stone-50 opacity-85"
-                : "shadow-stone-400  hover:shadow-stone-900 opacity-95"
-            } transition-transform duration-300 ease-in-out overflow-hidden`}
+                ? "shadow-stone-700 hover:shadow-stone-50 opacity-85"
+                : "shadow-stone-400 hover:shadow-stone-900 opacity-95"
+            } transition-transform duration-300 ease-in-out`}
           >
             <h2 className="text-center text-2xl font-bold text-stone-700 mb-6">
               Accede con tu cuenta
@@ -72,11 +64,16 @@ export default function Login() {
             </p>
             <button
               onClick={handleLogin}
-              className="w-full 
-              px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Iniciar sesión
             </button>
+            <p className="text-center text-sm mt-4 text-stone-500">
+              ¿No tienes cuenta?{" "}
+              <Link to="/registro" className="text-blue-600 hover:underline">
+                Crear una cuenta
+              </Link>
+            </p>
           </div>
         </div>
       </div>

@@ -5,43 +5,32 @@ import { ThemeContext } from "../context/ThemeContext";
 const BlurSlideTransition = ({ children }) => {
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(true);
-  const [isExiting, setIsExiting] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const { darkMode } = useContext(ThemeContext);
 
   useEffect(() => {
-    // Comienza la animación de salida
-    setIsExiting(true);
+    // Comienza la transición de salida
+    setIsTransitioning(true);
 
-    // Espera a que termine la animación de salida antes de ocultar el contenido
     const timeoutId = setTimeout(() => {
-      setIsExiting(false); // Termina la animación de salida
+      setIsTransitioning(false); // Finaliza transición
       setIsVisible(true); // Muestra el nuevo contenido
-    }, 1000); // Duración de la animación
+    }, 300); // Menor duración para animaciones más rápidas
 
-    // Limpieza: oculta el contenido anterior al salir
     return () => {
       clearTimeout(timeoutId);
-      setIsVisible(false); // Oculta el contenido anterior
+      setIsVisible(false); // Oculta el componente saliente
     };
   }, [location]);
 
   return (
     <div
-      className={`absolute w-full h-full transition-all duration-1000 ease-in-out ${
-        isExiting
-          ? "translate-x-full opacity-0 blur-sm"
-          : "translate-x-0 opacity-100 blur-0"
-      } ${darkMode ? "bg-black" : "bg-gray-100"}`}
+      className={`absolute w-full h-full transition-all duration-300 ease-in-out transform ${
+        isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"
+      } ${darkMode ? "bg-black" : "bg-white"}`}
+      style={{ willChange: "opacity, transform" }} // Mejora rendimiento
     >
-      {isVisible && (
-        <div
-          className={`absolute w-full h-full transition-opacity duration-1000 ${
-            isExiting ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          {children}
-        </div>
-      )}
+      {isVisible && <div className="w-full h-full">{children}</div>}
     </div>
   );
 };
