@@ -3,25 +3,40 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/UserAuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import Footer from "../components/Footer";
-import { verificarUsuario } from "../utils/dummy_login_data";
 
 export default function Login() {
   const { darkMode } = useContext(ThemeContext);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState(""); // Usar username
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null); // Para manejar errores
 
   const inputClasses =
     "w-full p-2 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 placeholder-stone-400 focus:outline-none focus:border-stone-600 transition-colors duration-300";
 
   const handleLogin = async () => {
-    const user = await verificarUsuario(email, password);
-    if (user) {
-      login(user.username, user.isAdmin);
-      navigate(user.isAdmin ? "/AdminDashboard" : "/UserDashboard");
-    } else {
-      alert("Credenciales Incorrectas");
+    try {
+      const response = await fetch("http://proyecto-alfa.local/login", {
+        // Cambiar la ruta aquí
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Credenciales Incorrectas");
+      }
+
+      const data = await response.json();
+      // Supongamos que la respuesta contiene el usuario y isAdmin
+      login(data.username, data.isAdmin); // Usa el nombre de usuario y el rol
+      navigate(data.isAdmin ? "/AdminDashboard" : "/UserDashboard");
+    } catch (error) {
+      setError(error.message);
+      alert(error.message);
     }
   };
 
@@ -41,14 +56,14 @@ export default function Login() {
             </h2>
             <p className="my-4">
               <label className="text-sm font-bold uppercase text-stone-500">
-                Email:
+                Usuario:
               </label>
               <input
-                type="email"
+                type="text"
                 className={inputClasses}
-                placeholder="Ingresa tu email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Ingresa tu usuario"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </p>
             <p className="my-4">
@@ -59,6 +74,7 @@ export default function Login() {
                 type="password"
                 className={inputClasses}
                 placeholder="Ingresa tu contraseña"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </p>
@@ -68,6 +84,7 @@ export default function Login() {
             >
               Iniciar sesión
             </button>
+            {error && <p className="text-red-600 text-center mt-4">{error}</p>}
             <p className="text-center text-sm mt-4 text-stone-500">
               ¿No tienes cuenta?{" "}
               <Link to="/registro" className="text-blue-600 hover:underline">

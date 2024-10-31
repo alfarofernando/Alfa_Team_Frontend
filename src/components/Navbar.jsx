@@ -5,8 +5,6 @@ import { UserAuthContext } from "../context/UserAuthContext";
 import { linkStyles } from "../utils/Styles";
 import { NavLink } from "react-router-dom";
 import Rain from "./Rain";
-import SocialMediaSVG from "./SocialMediaSVG";
-import { pathD } from "../utils/svg.js";
 import LogoutButton from "./LogoutButton.jsx";
 
 export default function Navbar() {
@@ -183,6 +181,7 @@ export default function Navbar() {
                       Contacto
                     </NavLink>
                   </li>
+                  <li>{dashboardLink}</li>
                 </ul>
               </div>
             )}
@@ -216,7 +215,6 @@ export default function Navbar() {
                   Contacto
                 </NavLink>
               </li>
-
               <li>{dashboardLink}</li>
             </ul>
           </div>
