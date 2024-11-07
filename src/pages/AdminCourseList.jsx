@@ -1,44 +1,73 @@
-// src/pages/AdminCourseList.jsx
-import React, { useState } from "react"; // Asegúrate de importar useState
+import React, { useState, useEffect } from "react";
+import { useCourses } from "../hooks/useCourses";
 import { useNavigate } from "react-router-dom";
-import dummy_course_data from "../utils/dummy_course_data"; // Asegúrate de tener tus datos de cursos
 
 export default function AdminCourseList() {
-  const [courses, setCourses] = useState(dummy_course_data); // Asigna datos iniciales de cursos
-  const navigate = useNavigate();
+  const { courses, loading, error } = useCourses();
+  if (loading) {
+    return <p>CARGANDO CURSOS...</p>;
+  }
 
-  const handleAddCourse = () => {
-    navigate("/admin/add-course"); // Navega al formulario de agregar curso
-  };
-
-  const handleEditCourse = (courseId) => {
-    navigate(`/admin/edit-course/${courseId}`); // Navega al formulario de editar curso
-  };
-
-  const handleDeleteCourse = (courseId) => {
-    const updatedCourses = courses.filter(course => course.id !== courseId);
-    setCourses(updatedCourses); // Eliminar curso de la lista
-    alert("Curso eliminado."); // Mensaje de confirmación (puedes usar un modal)
-  };
-
+  if (error) {
+    return <p>{error}</p>;
+  }
   return (
     <div>
       <h2 className="text-2xl font-bold mt-8">Cursos Disponibles</h2>
-      <button onClick={handleAddCourse} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+      <button
+        onClick={() => navigate("/admin/add-course")}
+        className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+      >
         Agregar Curso
       </button>
       <ul className="mt-4">
-        {courses.map(course => (
-          <li key={course.id} className="flex justify-between items-center bg-gray-100 p-4 mb-2 rounded">
+        {courses.map((course) => (
+          <li
+            key={course.id}
+            className="flex justify-between items-center bg-gray-100 p-4 mb-2 rounded"
+          >
             <div>
               <h3 className="font-semibold">{course.title}</h3>
               <p>{course.description}</p>
             </div>
             <div>
-              <button onClick={() => handleEditCourse(course.id)} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded-lg">
+              <button
+                onClick={() => navigate(`/admin/edit-course/${course.id}`)}
+                className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded-lg"
+              >
                 Editar
               </button>
-              <button onClick={() => handleDeleteCourse(course.id)} className="ml-2 bg-red-400 hover:bg-red-500 text-white py-1 px-2 rounded-lg">
+              <button
+                onClick={async () => {
+                  const confirmDelete = window.confirm(
+                    "¿Estás seguro de que deseas eliminar este curso?"
+                  );
+                  if (confirmDelete) {
+                    try {
+                      const response = await fetch(
+                        `http://proyecto-alfa.local/deleteCourse/${course.id}`,
+                        {
+                          method: "DELETE",
+                        }
+                      );
+
+                      if (!response.ok) {
+                        throw new Error("Error al eliminar el curso");
+                      }
+
+                      const updatedCourses = courses.filter(
+                        (course) => course.id !== course.id
+                      );
+                      setCourses(updatedCourses);
+                      alert("Curso eliminado con éxito.");
+                    } catch (err) {
+                      setError("No se pudo eliminar el curso.");
+                      console.log("Error:", err.message);
+                    }
+                  }
+                }}
+                className="ml-2 bg-red-400 hover:bg-red-500 text-white py-1 px-2 rounded-lg"
+              >
                 Eliminar
               </button>
             </div>
@@ -47,4 +76,4 @@ export default function AdminCourseList() {
       </ul>
     </div>
   );
-};
+}

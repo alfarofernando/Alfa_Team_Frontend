@@ -1,21 +1,22 @@
+// ProtectedRoutes.jsx
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/UserAuthContext";
 
-const ProtectedRoutes = ({ adminOnly = false }) => {
+export default function ProtectedRoutes({ adminOnly = false }) {
   const { user } = useAuth();
 
-  if (!user) {
-    // Redirige al login si no hay un usuario autenticado.
-    return <Navigate to="/Login" />;
+  // Si el usuario no está definido, carga desde localStorage como respaldo
+  const savedUser = localStorage.getItem("user");
+  const currentUser = user || (savedUser && JSON.parse(savedUser));
+
+  if (!currentUser) {
+    return <Navigate to="/login" />;
   }
 
-  if (adminOnly && !user.isAdmin) {
-    // Si no es admin y la ruta es solo para admins, redirige al dashboard del usuario.
+  if (adminOnly && !currentUser.isAdmin) {
     return <Navigate to="/UserDashboard" />;
   }
 
-  // Permite el acceso si todo está en orden.
   return <Outlet />;
-};
-
-export default ProtectedRoutes;
+}

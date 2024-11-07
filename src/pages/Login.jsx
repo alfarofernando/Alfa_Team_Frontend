@@ -8,7 +8,7 @@ export default function Login() {
   const { darkMode } = useContext(ThemeContext);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [username, setUsername] = useState(""); // Usar username
+  const [email, setEmail] = useState(""); // Cambiar de username a email
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null); // Para manejar errores
 
@@ -18,12 +18,11 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await fetch("http://proyecto-alfa.local/login", {
-        // Cambiar la ruta aquí
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }), // Cambiar de username a email
       });
 
       if (!response.ok) {
@@ -31,6 +30,8 @@ export default function Login() {
       }
 
       const data = await response.json();
+      // Guardamos la información del usuario en localStorage
+      localStorage.setItem("user", JSON.stringify(data));
       // Supongamos que la respuesta contiene el usuario y isAdmin
       login(data.username, data.isAdmin); // Usa el nombre de usuario y el rol
       navigate(data.isAdmin ? "/AdminDashboard" : "/UserDashboard");
@@ -56,14 +57,14 @@ export default function Login() {
             </h2>
             <p className="my-4">
               <label className="text-sm font-bold uppercase text-stone-500">
-                Usuario:
+                Correo electrónico:
               </label>
               <input
-                type="text"
+                type="email" // Cambiar tipo a email
                 className={inputClasses}
-                placeholder="Ingresa tu usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Ingresa tu correo electrónico"
+                value={email} // Cambiar de username a email
+                onChange={(e) => setEmail(e.target.value)} // Cambiar de username a email
               />
             </p>
             <p className="my-4">

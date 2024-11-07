@@ -6,7 +6,6 @@ export default function Register() {
   const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -19,14 +18,42 @@ export default function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (formData.password !== formData.confirmPassword) {
       alert("Las contraseñas no coinciden.");
       return;
     }
-    // Aquí puedes enviar formData al backend para crear el usuario
-    alert("Cuenta creada con éxito.");
-    navigate("/login"); // Redirigir al login después de registrarse
+
+    // Preparamos los datos como un objeto JSON
+    const dataToSend = {
+      email: formData.email, // Ahora pasamos el email
+      password: formData.password,
+      // Puedes agregar más campos aquí si es necesario (como name, surname, etc.)
+    };
+
+    try {
+      const response = await fetch("http://proyecto-alfa.local/createUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Indicamos que estamos enviando JSON
+        },
+        body: JSON.stringify(dataToSend), // Convertimos el objeto a JSON
+      });
+
+      if (response.ok) {
+        alert("Cuenta creada con éxito.");
+        navigate("/login");
+      } else {
+        // Extraemos el mensaje de error desde la respuesta del servidor si es necesario
+        const errorData = await response.json();
+        alert(
+          errorData.message || "Error al crear la cuenta. Inténtalo de nuevo."
+        );
+      }
+    } catch (error) {
+      console.error("Error en la solicitud de registro:", error);
+      alert("Error en la solicitud. Inténtalo de nuevo.");
+    }
   };
 
   return (
@@ -44,25 +71,13 @@ export default function Register() {
           </h2>
           <p className="my-4">
             <label className="text-sm font-bold uppercase text-stone-500">
-              Usuario:
-            </label>
-            <input
-              type="text"
-              name="username"
-              className={inputClasses}
-              placeholder="Ingresa un nombre de usuario"
-              onChange={handleChange}
-            />
-          </p>
-          <p className="my-4">
-            <label className="text-sm font-bold uppercase text-stone-500">
-              Email:
+              Correo electrónico:
             </label>
             <input
               type="email"
               name="email"
               className={inputClasses}
-              placeholder="Ingresa tu email"
+              placeholder="Ingresa tu correo electrónico"
               onChange={handleChange}
             />
           </p>

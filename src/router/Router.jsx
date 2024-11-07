@@ -30,7 +30,7 @@ export default function AppRouter() {
 
   return (
     <Routes>
-      {/* RUTAS PRUBLICAS SIN LOGUEO */}
+      {/* RUTAS PÚBLICAS SIN LOGUEO */}
       <Route
         path="/"
         element={
@@ -80,7 +80,6 @@ export default function AppRouter() {
         }
       />
       {/* RUTAS PROTEGIDAS */}
-      {/* ruta habilitada solo si no hay un usuario logeado */}
       <Route
         path="/Login"
         element={
@@ -97,7 +96,6 @@ export default function AppRouter() {
           </BlurSlideTransition>
         }
       />
-      {/* ruta hablitada solo para usuarios !admin */}
       <Route element={<ProtectedRoutes />}>
         <Route
           path="/UserDashboard"
@@ -108,7 +106,6 @@ export default function AppRouter() {
           }
         />
       </Route>
-      {/* Ruta habilitada solo para usuarios admin */}
       <Route element={<ProtectedRoutes adminOnly />}>
         <Route
           path="/AdminDashboard"
@@ -122,8 +119,7 @@ export default function AppRouter() {
           path="/admin/add-course"
           element={<AddCourse addCourse={addCourse} />}
         />
-        <Route path="/admin/course-list" element={<AdminCourseList />} />{" "}
-        {/* Ruta para ver cursos */}
+        <Route path="/admin/course-list" element={<AdminCourseList />} />
         <Route
           path="/admin/edit-course/:courseId"
           element={<EditCourse updateCourse={updateCourse} />}
