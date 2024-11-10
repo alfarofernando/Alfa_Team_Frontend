@@ -30,10 +30,15 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-2xl p-8">
         <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
-        <p className="text-gray-700 mb-8">Hola, {user.username}. Administra los recursos del sitio.</p>
+        <p className="text-gray-700 mb-8">
+          Hola, {user.username}. Administra los recursos del sitio.
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button onClick={handleViewCourses} className="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg">
+          <button
+            onClick={handleViewCourses}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg"
+          >
             Ver Cursos
           </button>
           <button className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg">
@@ -49,7 +54,7 @@ const AdminDashboard = () => {
             onClick={handleManageLessonAccess}
             className="bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg"
           >
-            Administrar Acceso a Lecciones
+            Administrar Acceso a Cursos
           </button>
         </div>
 

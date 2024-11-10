@@ -18,6 +18,7 @@ import AdminDashboard from "../pages/AdminDashboard";
 import UserDashboard from "../pages/UserDashboard";
 import ManageLessonAccess from "../pages/ManageLessonAccess";
 import Reports from "../pages/Reports.jsx";
+import UserCourses from "../pages/UserCourses.jsx";
 
 export default function AppRouter() {
   const { user } = useAuth();
@@ -81,7 +82,7 @@ export default function AppRouter() {
       />
       {/* RUTAS PROTEGIDAS */}
       <Route
-        path="/Login"
+        path="/login"
         element={
           <BlurSlideTransition>
             <Login />
@@ -102,6 +103,16 @@ export default function AppRouter() {
           element={
             <BlurSlideTransition>
               <UserDashboard />
+            </BlurSlideTransition>
+          }
+        />
+      </Route>
+      <Route element={<ProtectedRoutes />}>
+        <Route
+          path="/UserCourses"
+          element={
+            <BlurSlideTransition>
+              <UserCourses />
             </BlurSlideTransition>
           }
         />

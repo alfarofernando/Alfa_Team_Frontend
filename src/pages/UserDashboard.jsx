@@ -1,35 +1,88 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useAuth } from "../context/UserAuthContext";
 import { useNavigate } from "react-router-dom";
-import { ThemeContext } from "../context/ThemeContext"; // Importamos el contexto para dark mode
+import { ThemeContext } from "../context/ThemeContext";
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
-  const { darkMode } = useContext(ThemeContext); // Accedemos al contexto de darkMode
+  const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
+
   const [userData, setUserData] = useState(null);
 
-  // Cargar los datos del usuario desde la base de datos al montar el componente
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await fetch(
-        `http://proyecto-alfa.local/api/user/${user.email}`
-      );
-      const data = await response.json();
-      setUserData(data); // Asignar los datos del usuario al estado
+      if (!user) {
+        console.log("NO USER IS LOGGED IN");
+        return;
+      }
+
+      const userId = user.id;
+
+      try {
+        const response = await fetch(`http://proyecto-alfa.local/user`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Error fetching data user");
+        }
+
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
     };
 
     fetchUserData();
-  }, [user.email]);
+  }, [user]);
 
   const handleLogout = async () => {
     await logout();
-    navigate("/"); // Redirige al login tras cerrar sesión
+    navigate("/");
   };
 
-  const handleUpdateUser = () => {
-    // Lógica para actualizar los datos del usuario
-    alert("Botón para actualizar información del usuario.");
+  const handleNavigateToCourses = () => {
+    navigate("/UserCourses"); // Navega a la vista de cursos habilitados
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateUser = async () => {
+    try {
+      const response = await fetch(
+        "http://proyecto-alfa.local/updateUserData",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            userData,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error updating user data");
+      }
+
+      alert("Datos actualizados correctamente.");
+    } catch (error) {
+      console.error("Error updating user data", error);
+    }
   };
 
   // Clases dinámicas para dark mode
@@ -49,7 +102,10 @@ const UserDashboard = () => {
         <h2 className="text-xl font-bold mb-8">Menú</h2>
         <ul className="space-y-4">
           <li>
-            <button className={`${buttonColor} w-full py-2 px-4 rounded`}>
+            <button
+              onClick={handleNavigateToCourses} // Manejar navegación a Mis Cursos
+              className={`${buttonColor} w-full py-2 px-4 rounded`}
+            >
               Mis Cursos
             </button>
           </li>
@@ -75,39 +131,51 @@ const UserDashboard = () => {
           className={`${cardColor} shadow-md rounded-lg p-8 w-full max-w-3xl mx-auto`}
         >
           <h1 className={`${textColor} text-2xl font-bold mb-4`}>
-            Bienvenido, {userData?.username}
+            Editar Perfil
           </h1>
-          <p className={`${textColor} text-gray-600 mb-6`}>
-            ¡Estamos contentos de verte de nuevo!
-          </p>
 
-          <div className="space-y-6">
-            {userData ? (
-              <>
-                <div className="flex justify-between">
-                  <p className={`${textColor} text-gray-700`}>
-                    Nombre: {userData.name}
-                  </p>
-                  <p className={`${textColor} text-gray-700`}>
-                    Email: {userData.email}
-                  </p>
-                </div>
-                <div className="flex justify-between">
-                  <p className={`${textColor} text-gray-700`}>
-                    Rol: {userData.isAdmin ? "Administrador" : "Usuario"}
-                  </p>
-                </div>
-                <button
-                  onClick={handleUpdateUser}
-                  className={`w-full ${buttonColor} ${buttonTextColor} py-2 rounded-lg mt-6`}
-                >
-                  Actualizar Información
-                </button>
-              </>
-            ) : (
-              <p>Cargando datos...</p>
-            )}
-          </div>
+          {userData ? (
+            <form className="space-y-4">
+              {Object.entries(userData).map(([key, value]) => {
+                if (
+                  [
+                    "id",
+                    "isAdmin",
+                    "permittedCourses",
+                    "created_at",
+                    "image",
+                  ].includes(key)
+                ) {
+                  return null; // Omitimos estos campos
+                }
+
+                return (
+                  <div key={key} className="flex flex-col">
+                    <label className={`${textColor} font-semibold capitalize`}>
+                      {key.replace(/_/g, " ")}
+                    </label>
+                    <input
+                      type={key === "password" ? "password" : "text"}
+                      name={key}
+                      value={value || ""}
+                      onChange={handleInputChange}
+                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                );
+              })}
+
+              <button
+                type="button"
+                onClick={handleUpdateUser}
+                className={`w-full ${buttonColor} ${buttonTextColor} py-3 rounded-lg mt-6 font-semibold`}
+              >
+                Actualizar Información
+              </button>
+            </form>
+          ) : (
+            <p className={`${textColor} text-center`}>Cargando datos...</p>
+          )}
         </div>
       </div>
     </div>

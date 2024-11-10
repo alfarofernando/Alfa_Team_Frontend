@@ -1,43 +1,67 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/UserAuthContext";
+import { useAuth } from "../context/UserAuthContext"; // Importa el contexto
 import { ThemeContext } from "../context/ThemeContext";
 import Footer from "../components/Footer";
 
 export default function Login() {
   const { darkMode } = useContext(ThemeContext);
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  const [email, setEmail] = useState(""); // Cambiar de username a email
+  const { setUser } = useAuth(); // Accede a setUser desde el contexto
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Para manejar errores
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const inputClasses =
     "w-full p-2 border-b-2 rounded-sm border-stone-300 bg-stone-200 text-stone-600 placeholder-stone-400 focus:outline-none focus:border-stone-600 transition-colors duration-300";
 
   const handleLogin = async () => {
+    console.log("Iniciando proceso de login...");
+    console.log("Correo:", email, "Contraseña:", password);
+
     try {
       const response = await fetch("http://proyecto-alfa.local/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }), // Cambiar de username a email
+        body: JSON.stringify({ email, password }),
       });
 
+      console.log("Respuesta del servidor recibida:", response);
+
       if (!response.ok) {
-        throw new Error("Credenciales Incorrectas");
+        throw new Error("Credenciales incorrectas");
       }
 
       const data = await response.json();
-      // Guardamos la información del usuario en localStorage
-      localStorage.setItem("user", JSON.stringify(data));
-      // Supongamos que la respuesta contiene el usuario y isAdmin
-      login(data.username, data.isAdmin); // Usa el nombre de usuario y el rol
-      navigate(data.isAdmin ? "/AdminDashboard" : "/UserDashboard");
+
+      console.log("Datos recibidos:", data);
+
+      // Verifica si la respuesta contiene un ID (lo cual indica que el login fue exitoso)
+      if (data.id) {
+        setUser(data); // Almacena el usuario en el contexto global
+        console.log("Login exitoso, redirigiendo...");
+
+        // Verifica si es un administrador
+        if (data.isAdmin) {
+          console.log(
+            "Usuario es administrador, redirigiendo a AdminDashboard..."
+          );
+          navigate("/AdminDashboard"); // Redirige al dashboard del administrador
+        } else {
+          console.log("Usuario regular, redirigiendo a UserDashboard...");
+          navigate("/UserDashboard"); // Redirige al dashboard del usuario
+        }
+      } else {
+        console.log(
+          "Error de autenticación: respuesta del servidor no exitosa."
+        );
+        throw new Error("Error de autenticación");
+      }
     } catch (error) {
       setError(error.message);
-      alert(error.message);
+      console.log("Error durante el proceso de login:", error);
     }
   };
 
@@ -60,11 +84,11 @@ export default function Login() {
                 Correo electrónico:
               </label>
               <input
-                type="email" // Cambiar tipo a email
+                type="email"
                 className={inputClasses}
                 placeholder="Ingresa tu correo electrónico"
-                value={email} // Cambiar de username a email
-                onChange={(e) => setEmail(e.target.value)} // Cambiar de username a email
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </p>
             <p className="my-4">
