@@ -1,37 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Select from "react-select";
 import { useUsers } from "../hooks/useUsers";
 import { useCourses } from "../hooks/useCourses";
 
 const ManageCoursesAccess = () => {
-  const { users, setUsers, loading, error } = useUsers(); // Usamos setUsers para actualizar el estado
+  const { users, setUsers, loading, error } = useUsers();
   const {
     courses,
     loading: coursesLoading,
     error: coursesError,
   } = useCourses();
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para la barra de búsqueda
   const [selectedUser, setSelectedUser] = useState(null);
-  const [newCourseTitle, setNewCourseTitle] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(null); // Cambiado a objeto de `react-select`
   const [alertMessage, setAlertMessage] = useState("");
 
-  const getCourseIdByTitle = (courseTitle) => {
-    if (!courses || !courseTitle) {
-      console.error("No se encontraron cursos o el título es inválido.");
-      return null;
-    }
-    const course = courses.find((course) => course.title === courseTitle);
-    return course ? course.id : null;
-  };
-
-  const handleCourseAction = async (courseTitle, action) => {
-    if (!selectedUser || !courseTitle) {
+  const handleCourseAction = async (courseId, action) => {
+    if (!selectedUser || !courseId) {
       setAlertMessage("Seleccione un usuario y un curso válido.");
-      return;
-    }
-
-    const courseId = getCourseIdByTitle(courseTitle);
-
-    if (!courseId) {
-      setAlertMessage("Curso no encontrado.");
       return;
     }
 
@@ -55,12 +41,17 @@ const ManageCoursesAccess = () => {
       if (response.ok) {
         const updatedCourses =
           action === "assign"
-            ? [...selectedUser.courses, courseTitle]
-            : selectedUser.courses.filter((course) => course !== courseTitle);
+            ? [
+                ...selectedUser.courses,
+                courses.find((c) => c.id === courseId).title,
+              ]
+            : selectedUser.courses.filter(
+                (course) =>
+                  course !== courses.find((c) => c.id === courseId).title
+              );
 
         setSelectedUser({ ...selectedUser, courses: updatedCourses });
 
-        // Actualizamos el estado global de los usuarios para reflejar el cambio
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.user_id === selectedUser.user_id
@@ -71,8 +62,8 @@ const ManageCoursesAccess = () => {
 
         setAlertMessage(
           action === "assign"
-            ? `Curso "${courseTitle}" asignado con éxito.`
-            : `Curso "${courseTitle}" revocado con éxito.`
+            ? `Curso asignado con éxito.`
+            : `Curso revocado con éxito.`
         );
       } else {
         setAlertMessage(data.error || "Error al realizar la acción.");
@@ -81,6 +72,11 @@ const ManageCoursesAccess = () => {
       setAlertMessage(error.message || "Error de conexión.");
     }
   };
+
+  // Filtrar usuarios por el término de búsqueda
+  const filteredUsers = users.filter((user) =>
+    user.user_email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
@@ -95,6 +91,15 @@ const ManageCoursesAccess = () => {
 
         {!loading && !coursesLoading && !error && !coursesError && (
           <>
+            <div className="mb-6">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar por email"
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
             <h2 className="text-xl font-semibold mb-4">Usuarios</h2>
             <table className="w-full table-auto border-collapse border border-gray-300">
               <thead>
@@ -105,7 +110,7 @@ const ManageCoursesAccess = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {filteredUsers.map((user) => (
                   <tr key={user.user_id} className="text-center">
                     <td className="border p-4">{user.user_email}</td>
                     <td className="border p-4">
@@ -138,21 +143,27 @@ const ManageCoursesAccess = () => {
                   Gestionar cursos para {selectedUser.user_email}
                 </h2>
                 <div className="flex items-center mb-6">
-                  <input
-                    type="text"
-                    className="border rounded-lg p-2 mr-2"
-                    placeholder="Título del curso"
-                    value={newCourseTitle}
-                    onChange={(e) => setNewCourseTitle(e.target.value)}
+                  <Select
+                    value={selectedCourse}
+                    onChange={(option) => setSelectedCourse(option)}
+                    options={courses.map((course) => ({
+                      value: course.id,
+                      label: course.title,
+                    }))}
+                    placeholder="Seleccione un curso"
                   />
                   <button
-                    onClick={() => handleCourseAction(newCourseTitle, "assign")}
-                    className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded"
+                    onClick={() =>
+                      handleCourseAction(selectedCourse?.value, "assign")
+                    }
+                    className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded ml-2"
                   >
                     Asignar Curso
                   </button>
                   <button
-                    onClick={() => handleCourseAction(newCourseTitle, "revoke")}
+                    onClick={() =>
+                      handleCourseAction(selectedCourse?.value, "revoke")
+                    }
                     className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded ml-2"
                   >
                     Revocar Curso
