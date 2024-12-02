@@ -1,9 +1,9 @@
 import React from "react";
-import { useCourses } from "../hooks/useCourses";
+import { useCourses } from "../hooks/UseCourses";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminCourseList() {
-  const { courses, loading, error } = useCourses();
+  const { courses, setCourses, loading, error, setError } = useCourses();
   const navigate = useNavigate();
 
   if (loading) {
@@ -64,8 +64,9 @@ export default function AdminCourseList() {
                       }
 
                       const updatedCourses = courses.filter(
-                        (course) => course.id !== course.id
+                        (c) => c.id !== course.id
                       );
+
                       setCourses(updatedCourses);
                       alert("Curso eliminado con éxito.");
                     } catch (err) {

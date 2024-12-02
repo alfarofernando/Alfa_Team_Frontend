@@ -18,11 +18,12 @@ export const useCourses = () => {
         setError(err.message);
       } finally {
         setLoading(false);
+        console.log(courses);
       }
     };
 
     fetchCourses();
   }, []);
 
-  return { courses, loading, error };
+  return { courses, loading, error, setError, setCourses };
 };

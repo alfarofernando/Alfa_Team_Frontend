@@ -67,7 +67,7 @@ export default function AppRouter() {
         }
       />
       <Route
-        path="/curso/:courseId"
+        path="/course/:courseId"
         element={
           <BlurSlideTransition>
             <CourseDetail />
