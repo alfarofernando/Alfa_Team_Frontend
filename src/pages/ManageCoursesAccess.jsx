@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { useUsers } from "../hooks/useUsers";
 import { useCourses } from "../hooks/useCourses";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 
 const ManageCoursesAccess = () => {
   const { users, setUsers, loading, error } = useUsers();
@@ -14,6 +15,8 @@ const ManageCoursesAccess = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null); // Cambiado a objeto de `react-select`
   const [alertMessage, setAlertMessage] = useState("");
+
+  const navigate = useNavigate(); // Inicializa el hook useNavigate
 
   const handleCourseAction = async (courseId, action) => {
     if (!selectedUser || !courseId) {
@@ -100,49 +103,59 @@ const ManageCoursesAccess = () => {
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
-            <h2 className="text-xl font-semibold mb-4">Usuarios</h2>
-            <table className="w-full table-auto border-collapse border border-gray-300">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border p-4">Email</th>
-                  <th className="border p-4">Cursos Asignados</th>
-                  <th className="border p-4">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.user_id} className="text-center">
-                    <td className="border p-4">{user.user_email}</td>
-                    <td className="border p-4">
-                      {user.courses.length > 0 ? (
-                        <ul className="list-disc list-inside">
-                          {user.courses.map((course, index) => (
-                            <li key={index}>{course}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p>Sin cursos asignados</p>
-                      )}
-                    </td>
-                    <td className="border p-4">
-                      <button
-                        onClick={() => setSelectedUser(user)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded"
-                      >
-                        Gestionar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+            {/* Verificar si se ha realizado una búsqueda antes de mostrar usuarios */}
+            {searchTerm === "" ? (
+              <p>
+                Por favor, realice una búsqueda utilizando la barra de búsqueda.
+              </p>
+            ) : (
+              <>
+                <h2 className="text-xl font-semibold mb-4">Usuarios</h2>
+                <table className="w-full table-auto border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border p-4">Email</th>
+                      <th className="border p-4">Cursos Asignados</th>
+                      <th className="border p-4">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredUsers.map((user) => (
+                      <tr key={user.user_id} className="text-center">
+                        <td className="border p-4">{user.user_email}</td>
+                        <td className="border p-4">
+                          {user.courses.length > 0 ? (
+                            <ul className="list-disc list-inside">
+                              {user.courses.map((course, index) => (
+                                <li key={index}>{course}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p>Sin cursos asignados</p>
+                          )}
+                        </td>
+                        <td className="border p-4">
+                          <button
+                            onClick={() => setSelectedUser(user)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded"
+                          >
+                            Gestionar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
 
             {selectedUser && (
               <div className="mt-8">
                 <h2 className="text-xl font-semibold mb-4">
                   Gestionar cursos para {selectedUser.user_email}
                 </h2>
-                <div className="flex items-center mb-6">
+                <div className="flex items-center mb-6 w-full">
                   <Select
                     value={selectedCourse}
                     onChange={(option) => setSelectedCourse(option)}
@@ -151,6 +164,7 @@ const ManageCoursesAccess = () => {
                       label: course.title,
                     }))}
                     placeholder="Seleccione un curso"
+                    className="w-full" // Asegura que el Select ocupe todo el ancho
                   />
                   <button
                     onClick={() =>
@@ -175,6 +189,17 @@ const ManageCoursesAccess = () => {
                 )}
               </div>
             )}
+
+            {/* Botón para redirigir */}
+            <button
+              onClick={() => {
+                console.log("redirigiendo al menu principal"),
+                  navigate("/AdminDashboard");
+              }}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded mt-6"
+            >
+              Volver al Panel de Administración
+            </button>
           </>
         )}
       </div>

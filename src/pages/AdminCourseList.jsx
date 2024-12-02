@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function AdminCourseList() {
   const { courses, loading, error } = useCourses();
+  const navigate = useNavigate();
+
   if (loading) {
     return <p>CARGANDO CURSOS...</p>;
   }
@@ -16,9 +18,15 @@ export default function AdminCourseList() {
       <h2 className="text-2xl font-bold mt-8">Cursos Disponibles</h2>
       <button
         onClick={() => navigate("/admin/add-course")}
-        className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+        className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 mx-2 rounded"
       >
         Agregar Curso
+      </button>
+      <button
+        onClick={() => navigate("/AdminDashboard")}
+        className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 mx-2 rounded"
+      >
+        Volver al Panel de Administración
       </button>
       <ul className="mt-4">
         {courses.map((course) => (

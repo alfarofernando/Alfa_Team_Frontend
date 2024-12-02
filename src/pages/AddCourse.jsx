@@ -1,26 +1,29 @@
 // src/pages/AddCourse.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import dummy_course_data from '../utils/dummy_course_data';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddCourse = ({ addCourse }) => {
   const navigate = useNavigate();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [level, setLevel] = useState('1');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [level, setLevel] = useState("1");
   const [lessons, setLessons] = useState([]);
-  const [newLesson, setNewLesson] = useState({ title: '', type: 'text', content: '' });
+  const [newLesson, setNewLesson] = useState({
+    title: "",
+    type: "text",
+    content: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     addCourse({ title, description, level, lessons });
-    navigate('/admin/course-list'); // Redirigir al dashboard
+    navigate("/admin/course-list"); // Redirigir al dashboard
   };
 
   const handleAddLesson = () => {
     if (newLesson.title && newLesson.content) {
       setLessons([...lessons, { ...newLesson, id: Date.now() }]);
-      setNewLesson({ title: '', type: 'text', content: '' });
+      setNewLesson({ title: "", type: "text", content: "" });
     } else {
       alert("Por favor, complete todos los campos de la lección.");
     }
@@ -45,7 +48,9 @@ const AddCourse = ({ addCourse }) => {
         <form onSubmit={handleSubmit}>
           {/* Información del curso */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1" htmlFor="title">Título</label>
+            <label className="block text-gray-700 mb-1" htmlFor="title">
+              Título
+            </label>
             <input
               className="w-full border rounded-lg p-2"
               type="text"
@@ -57,7 +62,9 @@ const AddCourse = ({ addCourse }) => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1" htmlFor="description">Descripción</label>
+            <label className="block text-gray-700 mb-1" htmlFor="description">
+              Descripción
+            </label>
             <textarea
               className="w-full border rounded-lg p-2"
               id="description"
@@ -68,7 +75,9 @@ const AddCourse = ({ addCourse }) => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1" htmlFor="level">Nivel</label>
+            <label className="block text-gray-700 mb-1" htmlFor="level">
+              Nivel
+            </label>
             <select
               className="w-full border rounded-lg p-2"
               id="level"
@@ -90,7 +99,7 @@ const AddCourse = ({ addCourse }) => {
                 type="text"
                 value={lesson.title}
                 onChange={(e) =>
-                  handleLessonChange(lesson.id, 'title', e.target.value)
+                  handleLessonChange(lesson.id, "title", e.target.value)
                 }
                 placeholder="Título de la lección"
               />
@@ -98,7 +107,7 @@ const AddCourse = ({ addCourse }) => {
                 className="w-full border mb-2 p-2"
                 value={lesson.type}
                 onChange={(e) =>
-                  handleLessonChange(lesson.id, 'type', e.target.value)
+                  handleLessonChange(lesson.id, "type", e.target.value)
                 }
               >
                 <option value="text">Texto</option>
@@ -109,7 +118,7 @@ const AddCourse = ({ addCourse }) => {
                 type="text"
                 value={lesson.content}
                 onChange={(e) =>
-                  handleLessonChange(lesson.id, 'content', e.target.value)
+                  handleLessonChange(lesson.id, "content", e.target.value)
                 }
                 placeholder="Contenido o URL del video"
               />

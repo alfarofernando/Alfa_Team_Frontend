@@ -22,12 +22,6 @@ import UserCourses from "../pages/UserCourses.jsx";
 
 export default function AppRouter() {
   const { user } = useAuth();
-  const addCourse = (course) => {
-    // Lógica para añadir curso
-  };
-  const updateCourse = (courses) => {
-    // Lógica para modificar curso
-  };
 
   return (
     <Routes>
@@ -126,15 +120,9 @@ export default function AppRouter() {
             </BlurSlideTransition>
           }
         />
-        <Route
-          path="/admin/add-course"
-          element={<AddCourse addCourse={addCourse} />}
-        />
+        <Route path="/admin/add-course" element={<AddCourse />} />
         <Route path="/admin/course-list" element={<AdminCourseList />} />
-        <Route
-          path="/admin/edit-course/:courseId"
-          element={<EditCourse updateCourse={updateCourse} />}
-        />
+        <Route path="/admin/edit-course/:courseId" element={<EditCourse />} />
         <Route
           path="/admin/manage-lesson-access"
           element={<ManageCoursesAccess />}
