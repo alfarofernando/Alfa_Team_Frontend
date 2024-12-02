@@ -7,6 +7,7 @@ export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -19,32 +20,37 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
-    if (formData.password !== formData.confirmPassword) {
+    const { email, username, password, confirmPassword } = formData; // Desestructuramos formData
+
+    if (password !== confirmPassword) {
       alert("Las contraseñas no coinciden.");
+      return;
+    } else if (!email || !username || !password || !confirmPassword) {
+      alert("Por favor, completa todos los campos.");
       return;
     }
 
     // Preparamos los datos como un objeto JSON
     const dataToSend = {
-      email: formData.email, // Ahora pasamos el email
-      password: formData.password,
-      // Puedes agregar más campos aquí si es necesario (como name, surname, etc.)
+      email,
+      password,
+      username,
     };
 
     try {
       const response = await fetch("http://proyecto-alfa.local/createUser", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Indicamos que estamos enviando JSON
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataToSend), // Convertimos el objeto a JSON
+        body: JSON.stringify(dataToSend),
       });
 
       if (response.ok) {
         alert("Cuenta creada con éxito.");
+        console.log(dataToSend);
         navigate("/login");
       } else {
-        // Extraemos el mensaje de error desde la respuesta del servidor si es necesario
         const errorData = await response.json();
         alert(
           errorData.message || "Error al crear la cuenta. Inténtalo de nuevo."
@@ -78,6 +84,18 @@ export default function Register() {
               name="email"
               className={inputClasses}
               placeholder="Ingresa tu correo electrónico"
+              onChange={handleChange}
+            />
+          </p>
+          <p className="my-4">
+            <label className="text-sm font-bold uppercase text-stone-500">
+              Nombre Usuario:
+            </label>
+            <input
+              type="text"
+              name="username"
+              className={inputClasses}
+              placeholder="Ingresa tu nombre de usuario"
               onChange={handleChange}
             />
           </p>

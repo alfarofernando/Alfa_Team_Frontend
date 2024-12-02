@@ -16,7 +16,7 @@ import Login from "../pages/Login.jsx";
 import Registro from "../pages/Registro.jsx";
 import AdminDashboard from "../pages/AdminDashboard";
 import UserDashboard from "../pages/UserDashboard";
-import ManageLessonAccess from "../pages/ManageLessonAccess";
+import ManageCoursesAccess from "../pages/ManageCoursesAccess";
 import Reports from "../pages/Reports.jsx";
 import UserCourses from "../pages/UserCourses.jsx";
 
@@ -137,7 +137,7 @@ export default function AppRouter() {
         />
         <Route
           path="/admin/manage-lesson-access"
-          element={<ManageLessonAccess />}
+          element={<ManageCoursesAccess />}
         />
         <Route path="/admin/reports" element={<Reports />} />
       </Route>
