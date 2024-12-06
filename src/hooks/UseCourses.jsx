@@ -8,7 +8,9 @@ export const useCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("http://proyecto-alfa.local/getCourses");
+        const response = await fetch(
+          "http://proyecto-alfa.local/getAllCourses"
+        );
         if (!response.ok) {
           throw new Error("Error al obtener los cursos");
         }

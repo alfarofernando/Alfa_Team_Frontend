@@ -12,59 +12,111 @@ export default function Navbar() {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const { user, logout } = useContext(UserAuthContext);
 
-  /* // Cambiar entre modo claro y oscuro
-  function toggleDarkMode() {
-    setDarkMode((prevMode) => !prevMode);
-  } */
-
   // Aplicar el modo oscuro
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
-  console.log();
-
-  let dashboardLink;
-
-  if (user && user.isAdmin === true) {
-    dashboardLink = (
-      <ul className="container mx-auto flex justify-between items-center">
-        <li>
-          <NavLink to="/AdminDashboard" className={linkStyles}>
-            Dashboard
-          </NavLink>
-        </li>
-        <li>
-          <LogoutButton logout={logout} />
-        </li>
-      </ul>
-    );
-  } else if (user && user.isAdmin === false) {
-    dashboardLink = (
-      <ul className="container mx-auto flex justify-between items-center">
-        <li>
-          <NavLink to="/AdminDashboard" className={linkStyles}>
-            Dashboard
-          </NavLink>
-        </li>
-        <li>
-          <LogoutButton logout={logout} />
-        </li>
-      </ul>
-    );
-  } else {
-    dashboardLink = (
-      <NavLink to="/Login" className={linkStyles}>
-        Sign In
-      </NavLink>
-    );
-  }
+  const renderLinks = () => {
+    if (user && user.isAdmin) {
+      return (
+        <>
+          <li>
+            <NavLink to="/" className={linkStyles}>
+              Inicio
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin/course-list" className={linkStyles}>
+              Cursos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin/manage-lesson-access" className={linkStyles}>
+              Accesos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin/reports" className={linkStyles}>
+              Reportes
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/Retos" className={linkStyles}>
+              Retos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/AdminDashboard" className={linkStyles}>
+              Panel
+            </NavLink>
+          </li>
+          <li>
+            <LogoutButton logout={logout} />
+          </li>
+        </>
+      );
+    } else if (user) {
+      return (
+        <>
+          <li>
+            <NavLink to="/" className={linkStyles}>
+              Inicio
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/UserCourses" className={linkStyles}>
+              Aprendizaje
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/Cursos" className={linkStyles}>
+              Comprar
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/UserDashboard" className={linkStyles}>
+              Mi Perfil
+            </NavLink>
+          </li>
+          <li>
+            <LogoutButton logout={logout} />
+          </li>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <li>
+            <NavLink to="/" className={linkStyles}>
+              Inicio
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/Cursos" className={linkStyles}>
+              Cursos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/Retos" className={linkStyles}>
+              Retos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/Login" className={linkStyles}>
+              Iniciar Sesión
+            </NavLink>
+          </li>
+        </>
+      );
+    }
+  };
 
   return (
     <>
       <Rain />
       <nav
-        className={` z-10 lg:p-4 md:p-2 sm:p-1 transition-all duration-[2000ms] ease-in-out ${
+        className={`z-10 lg:p-4 md:p-2 sm:p-1 transition-all duration-[2000ms] ease-in-out ${
           darkMode
             ? "bg-gradient-dark bg-opacity-80 text-[#ecf0f1] animate-background"
             : "bg-gradient-light bg-opacity-70 text-[#2c3e50] animate-background"
@@ -155,68 +207,14 @@ export default function Navbar() {
                   darkMode ? "bg-white text-black" : "bg-black text-white"
                 }`}
               >
-                <ul className="flex flex-col space-y-2">
-                  <li>
-                    <NavLink to="/" className={linkStyles}>
-                      Home
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/Nosotros" className={linkStyles}>
-                      Nosotros
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/Cursos" className={linkStyles}>
-                      Cursos
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/Retos" className={linkStyles}>
-                      Codeum
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/Contacto" className={linkStyles}>
-                      Contacto
-                    </NavLink>
-                  </li>
-                  <li>{dashboardLink}</li>
-                </ul>
+                <ul className="flex flex-col space-y-2">{renderLinks()}</ul>
               </div>
             )}
           </div>
 
           {/* Links para pantallas grandes */}
           <div className="hidden lg:flex space-x-8 m-2 rounded">
-            <ul className="flex space-x-4">
-              <li>
-                <NavLink to="/" className={linkStyles}>
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/Nosotros" className={linkStyles}>
-                  Nosotros
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/Cursos" className={linkStyles}>
-                  Cursos
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/Retos" className={linkStyles}>
-                  Codeum
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/Contacto" className={linkStyles}>
-                  Contacto
-                </NavLink>
-              </li>
-              <li>{dashboardLink}</li>
-            </ul>
+            <ul className="flex space-x-4">{renderLinks()}</ul>
           </div>
         </div>
       </nav>

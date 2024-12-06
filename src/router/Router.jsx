@@ -19,6 +19,7 @@ import UserDashboard from "../pages/UserDashboard";
 import ManageCoursesAccess from "../pages/ManageCoursesAccess";
 import Reports from "../pages/Reports.jsx";
 import UserCourses from "../pages/UserCourses.jsx";
+import LearnCourse from "../pages/LearnCourse.jsx";
 
 export default function AppRouter() {
   const { user } = useAuth();
@@ -74,7 +75,6 @@ export default function AppRouter() {
           </BlurSlideTransition>
         }
       />
-      {/* RUTAS PROTEGIDAS */}
       <Route
         path="/login"
         element={
@@ -91,12 +91,23 @@ export default function AppRouter() {
           </BlurSlideTransition>
         }
       />
+      {/* RUTAS PROTEGIDAS */}
       <Route element={<ProtectedRoutes />}>
         <Route
           path="/UserDashboard"
           element={
             <BlurSlideTransition>
               <UserDashboard />
+            </BlurSlideTransition>
+          }
+        />
+      </Route>
+      <Route element={<ProtectedRoutes />}>
+        <Route
+          path="/LearnCourse/:courseId"
+          element={
+            <BlurSlideTransition>
+              <LearnCourse />
             </BlurSlideTransition>
           }
         />
@@ -111,6 +122,7 @@ export default function AppRouter() {
           }
         />
       </Route>
+      {/* RUTAS PROTEGIDAS SOLO ADMINISTRADOR */}
       <Route element={<ProtectedRoutes adminOnly />}>
         <Route
           path="/AdminDashboard"

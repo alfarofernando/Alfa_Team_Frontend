@@ -9,10 +9,10 @@ export default function Footer() {
   const { darkMode } = useContext(ThemeContext);
 
   return (
-    <>
+    <div className=" ">
       <SeparadorLuminoso />
       <div
-        className={`relative shadow-lg p-4 space-y-4 z-50 text-lg text-center transition-all duration-500 hover:text-xl ${
+        className={`fixed bottom--10 right-0 left-0 shadow-lg p-4 space-y-4 z-50 text-lg text-center transition-all duration-500 hover:text-xl ${
           darkMode ? "bg-black text-white" : "bg-gray-100 text-black"
         }`}
       >
@@ -73,6 +73,6 @@ export default function Footer() {
           © 2024 Alfa Team Inc. , All rights reserved.
         </p>
       </div>
-    </>
+    </div>
   );
 }
