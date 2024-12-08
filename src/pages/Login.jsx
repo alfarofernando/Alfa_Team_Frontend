@@ -1,11 +1,9 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/UserAuthContext"; // Importa el contexto
-import { ThemeContext } from "../context/ThemeContext";
 import Footer from "../components/Footer";
 
 export default function Login() {
-  const { darkMode } = useContext(ThemeContext);
   const { setUser } = useAuth(); // Accede a setUser desde el contexto
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -69,13 +67,7 @@ export default function Login() {
     <>
       <div className="relative overflow-hidden z-10 py-8 my-8">
         <div className="flex items-center justify-center">
-          <div
-            className={`relative w-2/3 px-10 py-5 rounded-lg shadow-lg ${
-              darkMode
-                ? "shadow-stone-700 hover:shadow-stone-50 opacity-85"
-                : "shadow-stone-400 hover:shadow-stone-900 opacity-95"
-            } transition-transform duration-300 ease-in-out`}
-          >
+          <div className="relative w-2/3 px-10 py-5 rounded-lg shadow-lg opacity-95 transition-transform duration-300 ease-in-out">
             <h2 className="text-center text-2xl font-bold text-stone-700 mb-6">
               Accede con tu cuenta
             </h2>

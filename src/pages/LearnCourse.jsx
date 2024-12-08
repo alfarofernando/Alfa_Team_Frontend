@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import LearnCourseSidebar from "../components/LearnCourseSidebar.jsx";
 import Footer from "../components/Footer.jsx";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 function LearnCourse() {
   const { courseId } = useParams();
@@ -30,7 +32,8 @@ function LearnCourse() {
       .then((data) => {
         if (data && data.id) {
           setCourse(data);
-          setSelectedLesson(data.lessons?.[0] || null); // Selecciona la primera lección si está disponible
+          setSelectedLesson(data.lessons?.[0] || null);
+          console.log(data);
         } else {
           throw new Error("Datos del curso no válidos.");
         }
@@ -44,6 +47,46 @@ function LearnCourse() {
 
   const handleLessonClick = (lesson) => {
     setSelectedLesson(lesson);
+  };
+
+  const renderLessonContent = () => {
+    if (!selectedLesson) {
+      return (
+        <p className="text-gray-500">
+          Selecciona una lección para ver su contenido.
+        </p>
+      );
+    }
+
+    if (selectedLesson.type === "text") {
+      return (
+        <ReactQuill
+          value={selectedLesson.content}
+          readOnly={true}
+          theme="bubble"
+        />
+      );
+    }
+
+    if (selectedLesson.type === "video") {
+      return (
+        <div className="video-container">
+          <iframe
+            width="100%"
+            height="400px"
+            src={selectedLesson.content + "?autoplay=1&rel=0&modestbranding=1"} // Acepta URLs como https://www.youtube.com/embed/U9cKsJ0F5N8?si=lduQcVdVhgnCiJ-g
+            title={selectedLesson.title || "Video"}
+            frameBorder=""
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            referrerpolicy="no-referrer"
+            sandbox="allow-scripts allow-same-origin"
+          ></iframe>
+        </div>
+      );
+    }
+
+    return <p className="text-gray-500">Tipo de lección no soportado.</p>;
   };
 
   if (loading) {
@@ -60,9 +103,8 @@ function LearnCourse() {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row-reverse relative h-screen ">
-        {/* Sidebar con scroll a la derecha */}
-        <div className="overflow-y-auto h-full  bg-gray-100 p-4 border-l lg:border-r">
+      <div className="flex flex-col lg:flex-row-reverse relative h-screen">
+        <div className="overflow-y-auto h-full bg-gray-100 p-4 border-l lg:border-r">
           <LearnCourseSidebar
             lessons={course.lessons || []}
             selectedLesson={selectedLesson}
@@ -70,24 +112,15 @@ function LearnCourse() {
           />
         </div>
 
-        {/* Contenido principal con scroll a la izquierda */}
         <div className="flex-1 p-6 overflow-y-auto h-full">
           <h2 className="text-3xl text-center font-bold text-gray-800">
             {course.title}
           </h2>
           <div className="lesson-content text-center mt-6">
-            {selectedLesson ? (
-              <>
-                <h3 className="text-2xl font-semibold text-gray-700">
-                  {selectedLesson.title}
-                </h3>
-                <p className="mt-4 text-gray-600">{selectedLesson.content}</p>
-              </>
-            ) : (
-              <p className="text-gray-500">
-                Selecciona una lección para ver su contenido.
-              </p>
-            )}
+            <h3 className="text-2xl font-semibold text-gray-700">
+              {selectedLesson?.title}
+            </h3>
+            <div className="mt-4">{renderLessonContent()}</div>
           </div>
         </div>
       </div>

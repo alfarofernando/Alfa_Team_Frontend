@@ -1,30 +1,18 @@
-import { useContext } from "react";
 import Footer from "../components/Footer";
-import { ThemeContext } from "../context/ThemeContext";
 import SeparadorLuminoso from "../components/SeparadorLuminoso";
 import { nosotrosImagenEstilos } from "../utils/Styles.js";
 
 export default function Nosotros() {
-  const { darkMode } = useContext(ThemeContext);
-
-  const imageStyles = `${nosotrosImagenEstilos} ${
-    darkMode
-      ? "shadow-stone-700  hover:shadow-stone-50 opacity-85"
-      : "shadow-stone-400  hover:shadow-stone-900 opacity-95"
-  }`;
+  const imageStyles = `${nosotrosImagenEstilos} shadow-stone-400 hover:shadow-stone-900 opacity-95`;
 
   return (
     <>
-      <div
-        className={`relative  overflow-hidden z-10 mt-4 mx-8 ${
-          darkMode ? "bg-dark text-white" : "bg-gray-100 text-black"
-        }`}
-      >
-        <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-4 ">
+      <div className="relative overflow-hidden z-10 mt-4 mx-8 bg-gray-100 text-black">
+        <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* primera columna */}
           <div className="mt-8 justify-center">
             <h2 className="text-center mb-4 text-lg lg:text-3xl md:text-2xl font-bold">
-              Nuestro equipo{" "}
+              Nuestro equipo
             </h2>
             <p className="justify-around text-md lg:text-xl md:text-lg">
               Somos un grupo dinámico de personas apasionadas por lo que hacemos
@@ -37,7 +25,7 @@ export default function Nosotros() {
             </p>
           </div>
           {/* segunda columna */}
-          <div className=" my-4">
+          <div className="my-4">
             <div className="flex flex-col items-center">
               <img src="../../public/fort.avif" className={imageStyles} />
               <p className="font-bold text-lg lg:text-2xl md:text-xl sm:text-lg">

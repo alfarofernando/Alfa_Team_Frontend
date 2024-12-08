@@ -24,6 +24,17 @@ const ManageCoursesAccess = () => {
       return;
     }
 
+    // Verificar si el curso ya está asignado al usuario
+    if (
+      action === "assign" &&
+      selectedUser.courses.some(
+        (course) => course === courses.find((c) => c.id === courseId).title
+      )
+    ) {
+      setAlertMessage("El curso ya está asignado a este usuario.");
+      return;
+    }
+
     const endpoint =
       action === "assign"
         ? "http://proyecto-alfa.local/assignCourse"
@@ -104,7 +115,6 @@ const ManageCoursesAccess = () => {
               />
             </div>
 
-            {/* Verificar si se ha realizado una búsqueda antes de mostrar usuarios */}
             {searchTerm === "" ? (
               <p>
                 Por favor, realice una búsqueda utilizando la barra de búsqueda.
@@ -164,7 +174,7 @@ const ManageCoursesAccess = () => {
                       label: course.title,
                     }))}
                     placeholder="Seleccione un curso"
-                    className="w-full" // Asegura que el Select ocupe todo el ancho
+                    className="w-full"
                   />
                   <button
                     onClick={() =>
@@ -190,12 +200,8 @@ const ManageCoursesAccess = () => {
               </div>
             )}
 
-            {/* Botón para redirigir */}
             <button
-              onClick={() => {
-                console.log("redirigiendo al menu principal"),
-                  navigate("/AdminDashboard");
-              }}
+              onClick={() => navigate("/AdminDashboard")}
               className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded mt-6"
             >
               Volver al Panel de Administración

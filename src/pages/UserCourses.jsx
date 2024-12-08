@@ -2,6 +2,7 @@
 import React from "react";
 import { useUserCourses } from "../hooks/UseUserCourses";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const UserCourses = () => {
   const { courses, loading, error } = useUserCourses();
@@ -49,36 +50,32 @@ const UserCourses = () => {
 
   // Renderizado de los cursos
   return (
-    <div className="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {courses.map((course) => {
-        return (
-          <div
-            key={course.id}
-            className="flex flex-col justify-between bg-white rounded-lg shadow-lg p-4 hover:shadow-2xl transition duration-300 ease-in-out cursor-pointer"
-            onClick={() => handleCourseClick(course.id)}
-          >
-            {course.image && (
-              <img
-                src={course.image}
-                alt={course.title}
-                className="w-full h-48 object-cover rounded-lg"
-              />
-            )}
-            <h3 className="mt-4 text-xl font-semibold text-gray-800">
-              {course.title}
-            </h3>
-            <p className="mt-2 text-gray-600">
-              {course.description || "Sin descripción disponible"}
-            </p>
-            <div className="flex justify-between items-center mt-4">
-              <span className="text-sm font-medium text-gray-500">
-                Nivel: {course.level || "No especificado"}
-              </span>
+    <>
+      <div className="container mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {courses.map((course) => {
+          return (
+            <div
+              key={course.id}
+              className="flex flex-col justify-between bg-white rounded-lg shadow-lg p-4 hover:shadow-2xl transition duration-300 ease-in-out cursor-pointer"
+              onClick={() => handleCourseClick(course.id)}
+            >
+              <h3 className="mt-4 text-xl font-semibold text-gray-800">
+                {course.title}
+              </h3>
+              <p className="mt-2 text-gray-600">
+                {course.description || "Sin descripción disponible"}
+              </p>
+              <div className="flex justify-between items-center mt-4">
+                <span className="text-sm font-medium text-gray-500">
+                  Nivel: {course.level || "No especificado"}
+                </span>
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+      <Footer />
+    </>
   );
 };
 

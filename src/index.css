@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-*{
-    font-family: sans-serif , 'Trebuchet MS'  
+* {
+  font-family: sans-serif, "Trebuchet MS";
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ReactQuill from "react-quill"; // Importar ReactQuill
-import "react-quill/dist/quill.snow.css"; // Importar los estilos
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AddCourse = ({ addCourse }) => {
   const navigate = useNavigate();
@@ -9,45 +9,43 @@ const AddCourse = ({ addCourse }) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [image, setImage] = useState("");
   const [level, setLevel] = useState("1");
   const [lessons, setLessons] = useState([]);
   const [newLesson, setNewLesson] = useState({
     title: "",
     type: "text",
     content: "",
+    order_number: 1,
+    is_enabled: true, // Nuevo campo
   });
+  const [isEnabled, setIsEnabled] = useState(true); // Estado para habilitar/deshabilitar el curso
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Crear un objeto con los datos que se van a enviar
+    // Crear objeto con los datos que se van a enviar
     const courseData = {
       title,
       description,
       price,
       category,
-      image,
       level,
       lessons,
+      is_enabled: isEnabled, // Pasar estado de habilitación del curso
     };
 
     try {
-      // Realizar la solicitud POST para agregar el curso
       const response = await fetch("http://proyecto-alfa.local/addCourse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(courseData), // Enviar los datos en formato JSON
+        body: JSON.stringify(courseData),
       });
 
-      // Verificar si la solicitud fue exitosa
       if (response.ok) {
-        const data = await response.json(); // Obtener los datos de la respuesta del servidor
+        const data = await response.json();
         console.log("Curso agregado exitosamente:", data);
-
-        // Redirigir al dashboard (puedes cambiar esta ruta si es necesario)
         navigate("/admin/course-list");
       } else {
         const errorData = await response.json();
@@ -62,21 +60,43 @@ const AddCourse = ({ addCourse }) => {
 
   const handleAddLesson = () => {
     if (newLesson.title && newLesson.content) {
-      setLessons([...lessons, { ...newLesson, id: Date.now() }]);
-      setNewLesson({ title: "", type: "text", content: "" });
+      setLessons([...lessons, { ...newLesson }]); // El ID se asignará en el backend
+      setNewLesson({
+        title: "",
+        type: "text",
+        content: "",
+        order_number: lessons.length + 1,
+        is_enabled: true,
+      });
     } else {
       alert("Por favor, complete todos los campos de la lección.");
     }
   };
 
   const handleDeleteLesson = (id) => {
-    setLessons(lessons.filter((lesson) => lesson.id !== id));
+    setLessons(lessons.filter((lesson) => lesson.order_number !== id));
   };
 
-  const handleLessonChange = (id, field, value) => {
+  const handleLessonChange = (order_number, field, value) => {
     setLessons(
       lessons.map((lesson) =>
-        lesson.id === id ? { ...lesson, [field]: value } : lesson
+        lesson.order_number === order_number
+          ? { ...lesson, [field]: value }
+          : lesson
+      )
+    );
+  };
+
+  const toggleCourseEnabled = () => {
+    setIsEnabled((prevState) => !prevState);
+  };
+
+  const toggleLessonEnabled = (order_number) => {
+    setLessons(
+      lessons.map((lesson) =>
+        lesson.order_number === order_number
+          ? { ...lesson, is_enabled: !lesson.is_enabled }
+          : lesson
       )
     );
   };
@@ -93,6 +113,7 @@ const AddCourse = ({ addCourse }) => {
 
         <h1 className="text-3xl font-bold mb-6">Agregar Curso</h1>
         <form onSubmit={handleSubmit}>
+          {/* Campos del curso */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-1" htmlFor="title">
               Título
@@ -149,20 +170,6 @@ const AddCourse = ({ addCourse }) => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 mb-1" htmlFor="image">
-              URL de la Imagen
-            </label>
-            <input
-              className="w-full border rounded-lg p-2"
-              type="text"
-              id="image"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="mb-4">
             <label className="block text-gray-700 mb-1" htmlFor="level">
               Nivel
             </label>
@@ -178,62 +185,92 @@ const AddCourse = ({ addCourse }) => {
             </select>
           </div>
 
+          {/* Habilitar/Deshabilitar curso */}
+          <div className="mb-4">
+            <button
+              type="button"
+              onClick={toggleCourseEnabled}
+              className={`${
+                isEnabled ? "bg-green-500" : "bg-red-500"
+              } text-white py-2 px-4 rounded-lg`}
+            >
+              {isEnabled ? "Deshabilitar Curso" : "Habilitar Curso"}
+            </button>
+          </div>
+
+          {/* Lecciones */}
           <h2 className="text-2xl font-bold mt-6 mb-4">Lecciones</h2>
-          {lessons.map((lesson) => (
-            <div key={lesson.id} className="border p-4 mb-4 rounded-lg">
-              <input
-                className="w-full border mb-2 p-2"
-                type="text"
-                value={lesson.title}
-                onChange={(e) =>
-                  handleLessonChange(lesson.id, "title", e.target.value)
-                }
-                placeholder="Título de la lección"
-              />
-              <select
-                className="w-full border mb-2 p-2"
-                value={lesson.type}
-                onChange={(e) =>
-                  handleLessonChange(lesson.id, "type", e.target.value)
-                }
-              >
-                <option value="text">Texto</option>
-                <option value="video">Video</option>
-              </select>
-
-              {lesson.type === "text" ? (
-                <ReactQuill
-                  value={lesson.content}
-                  onChange={(value) =>
-                    handleLessonChange(lesson.id, "content", value)
-                  }
-                  placeholder="Escribe el contenido de la lección"
-                />
-              ) : (
+          {lessons.map((lesson) => {
+            return (
+              <div key={lesson.id} className="border p-4 mb-4 rounded-lg">
                 <input
-                  className="w-full border p-2"
+                  className="w-full border mb-2 p-2"
                   type="text"
-                  value={lesson.content}
+                  value={lesson.title}
                   onChange={(e) =>
-                    handleLessonChange(lesson.id, "content", e.target.value)
+                    handleLessonChange(lesson.id, "title", e.target.value)
                   }
-                  placeholder="Contenido o URL del video"
+                  placeholder="Título de la lección"
                 />
-              )}
+                <select
+                  className="w-full border mb-2 p-2"
+                  value={lesson.type}
+                  onChange={(e) =>
+                    handleLessonChange(lesson.id, "type", e.target.value)
+                  }
+                >
+                  <option value="text">Texto</option>
+                  <option value="video">Video</option>
+                </select>
 
-              <button
-                className="bg-red-500 text-white mt-2 px-4 py-1 rounded-lg"
-                onClick={() => handleDeleteLesson(lesson.id)}
-              >
-                Eliminar Lección
-              </button>
-            </div>
-          ))}
+                {lesson.type === "text" ? (
+                  <ReactQuill
+                    value={lesson.content}
+                    onChange={(value) =>
+                      handleLessonChange(lesson.id, "content", value)
+                    }
+                    placeholder="Escribe el contenido de la lección"
+                  />
+                ) : (
+                  <input
+                    className="w-full border p-2"
+                    type="text"
+                    value={lesson.content}
+                    onChange={(e) =>
+                      handleLessonChange(lesson.id, "content", e.target.value)
+                    }
+                    placeholder="Contenido o URL del video"
+                  />
+                )}
 
-          <div className="mt-4">
-            <h3 className="text-xl font-bold mb-2">Añadir Lección</h3>
+                {/* Botón para habilitar/deshabilitar lección */}
+                <button
+                  type="button"
+                  onClick={() => toggleLessonEnabled(lesson.id)}
+                  className={`${
+                    lesson.is_enabled ? "bg-green-500" : "bg-red-500"
+                  } text-white mt-2 px-4 py-1 rounded-lg`}
+                >
+                  {lesson.is_enabled
+                    ? "Deshabilitar Lección"
+                    : "Habilitar Lección"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDeleteLesson(lesson.id)}
+                  className="bg-red-600 text-white mt-2 px-4 py-1 rounded-lg"
+                >
+                  Eliminar Lección
+                </button>
+              </div>
+            );
+          })}
+
+          {/* Formulario de nueva lección */}
+          <div className="mb-4">
             <input
-              className="w-full border mb-2 p-2"
+              className="w-full border p-2 mb-2"
               type="text"
               value={newLesson.title}
               onChange={(e) =>
@@ -242,7 +279,7 @@ const AddCourse = ({ addCourse }) => {
               placeholder="Título de la lección"
             />
             <select
-              className="w-full border mb-2 p-2"
+              className="w-full border p-2 mb-2"
               value={newLesson.type}
               onChange={(e) =>
                 setNewLesson({ ...newLesson, type: e.target.value })
@@ -262,7 +299,7 @@ const AddCourse = ({ addCourse }) => {
               />
             ) : (
               <input
-                className="w-full border p-2"
+                className="w-full border p-2 mb-2"
                 type="text"
                 value={newLesson.content}
                 onChange={(e) =>
@@ -271,19 +308,21 @@ const AddCourse = ({ addCourse }) => {
                 placeholder="Contenido o URL del video"
               />
             )}
+          </div>
 
+          <div className="mb-4">
             <button
-              className="bg-green-500 text-white mt-2 px-4 py-1 rounded-lg"
               type="button"
               onClick={handleAddLesson}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg"
             >
-              Añadir Lección
+              Agregar Lección
             </button>
           </div>
 
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white py-2 mt-6 rounded-lg w-full"
             type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg"
           >
             Agregar Curso
           </button>

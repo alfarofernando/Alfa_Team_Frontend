@@ -1,10 +1,8 @@
 import { createPortal } from "react-dom";
-import React, { useContext, useState, useEffect } from "react";
-import { ThemeContext } from "../context/ThemeContext";
+import React, { useState, useEffect } from "react";
 
 export default function Rain() {
   const dropsCount = 0; // Número de gotas de lluvia
-  const { darkMode } = useContext(ThemeContext);
   const [visible, setVisible] = useState(false); // Estado para controlar la visibilidad
   const [drops, setDrops] = useState([]); // Estado para almacenar las gotas
 
@@ -18,15 +16,11 @@ export default function Rain() {
     const generateDrops = () => {
       const newDrops = [];
       for (let i = 0; i < dropsCount; i++) {
-        // Determina si la gota será corta o larga
+        // Crea la gota sin el cambio por darkMode
         newDrops.push(
           <div
             key={i}
-            className={`drop absolute left-0 bg-[rgba(0,102,204,0.5)] ${
-              darkMode
-                ? "bg-[rgba(200,200,200,0.5)]"
-                : "bg-[rgba(0,102,204,0.5)]"
-            } animate-fall`}
+            className={`drop absolute left-0 bg-[rgba(0,102,204,0.5)] animate-fall`}
             style={{
               left: `${Math.random() * 150}vw`,
               height: `${Math.floor(Math.random() * (30 - 5 + 1) + 5)}px`, // Aplica la altura determinada
@@ -54,7 +48,7 @@ export default function Rain() {
       clearTimeout(timeoutId);
       clearInterval(intervalId);
     };
-  }, [darkMode, dropsCount, visible]); // Agrega las dependencias necesarias
+  }, [dropsCount, visible]); // Elimina darkMode de las dependencias
 
   return createPortal(
     <div

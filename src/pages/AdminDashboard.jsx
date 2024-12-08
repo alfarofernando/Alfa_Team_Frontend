@@ -18,6 +18,9 @@ const AdminDashboard = () => {
     navigate("/admin/course-list");
   };
 
+  const handleViewCoursesAsUser = () => {
+    navigate("/UserCourses");
+  };
   const handleManageLessonAccess = () => {
     navigate("/admin/manage-lesson-access");
   };
@@ -39,10 +42,13 @@ const AdminDashboard = () => {
             onClick={handleViewCourses}
             className="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg"
           >
-            Ver Cursos
+            Administrar Cursos
           </button>
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg">
-            Ver Retos
+          <button
+            className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg"
+            onClick={handleViewCoursesAsUser}
+          >
+            Ver Cursos Como Usuario
           </button>
           <button
             onClick={handleViewReports}

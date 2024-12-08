@@ -65,6 +65,15 @@ const CourseDetail = () => {
     );
   }
 
+  // Redirigir si el curso no está habilitado
+  if (!course.is_enabled) {
+    navigate("/Cursos"); // Ajusta la ruta de redirección según lo necesites
+    return null; // Evitar renderizar el resto del componente
+  }
+
+  // Ordenar las lecciones por order_number
+  const sortedLessons = lessons.sort((a, b) => a.order_number - b.order_number);
+
   const paymentLink = "https://mpago.li/1CwqHvE";
   const userEmail = "alfateamventas@gmail.com";
 
@@ -111,14 +120,16 @@ const CourseDetail = () => {
           </h2>
           {showLessons && (
             <ol className="list-none space-y-4">
-              {lessons.map((lesson) => (
-                <li
-                  key={lesson.id}
-                  className="bg-gray-100 p-4 rounded-lg shadow-sm hover:bg-gray-200 hover:shadow-md transition-all"
-                >
-                  {lesson.title}
-                </li>
-              ))}
+              {sortedLessons
+                .filter((lesson) => lesson.is_enabled) // Solo renderizar lecciones habilitadas
+                .map((lesson) => (
+                  <li
+                    key={lesson.id}
+                    className="bg-gray-100 p-4 rounded-lg shadow-sm hover:bg-gray-200 hover:shadow-md transition-all"
+                  >
+                    {lesson.title}
+                  </li>
+                ))}
             </ol>
           )}
         </div>

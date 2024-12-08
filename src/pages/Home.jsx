@@ -1,19 +1,11 @@
-import { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
 import Tarjeta from "../components/Tarjeta";
 import Separador from "../components/Separador";
-
 import Footer from "../components/Footer";
 
 export default function Home() {
-  const { darkMode } = useContext(ThemeContext);
   return (
     <>
-      <div
-        className={`relative z-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mx-10 my-4 p-4 ${
-          darkMode ? "bg-dark" : "bg-gray-100"
-        }`}
-      >
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mx-10 my-4 p-4 bg-gray-100">
         <Tarjeta
           titulo="Coliseo del Codigo"
           imagen1="../../public/gladiador1.webp"
@@ -32,11 +24,7 @@ export default function Home() {
         />
       </div>
       <Separador />
-      <div
-        className={`grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mx-10 p-4 ${
-          darkMode ? "bg-dark" : "bg-gray-100"
-        }`}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mx-10 p-4 bg-gray-100">
         <Tarjeta
           titulo="Curso 1"
           imagen1="../../public/pc-sana.jpg"
@@ -63,7 +51,6 @@ export default function Home() {
         />
       </div>
       <Separador />
-
       <Footer />
     </>
   );

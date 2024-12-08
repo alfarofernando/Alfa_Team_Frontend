@@ -1,18 +1,10 @@
-import { useContext } from "react";
 import Footer from "../components/Footer";
-import { ThemeContext } from "../context/ThemeContext";
 import Form from "../components/Form";
 
 export default function Contacto() {
-  const { darkMode } = useContext(ThemeContext);
-
   return (
     <>
-      <div
-        className={`relative overflow-hidden z-10 py-4 my-4 mx-8 ${
-          darkMode ? "bg-dark text-white" : "bg-gray-100 text-black"
-        }`}
-      >
+      <div className="relative overflow-hidden z-10 py-4 my-4 mx-8 bg-gray-100 text-black">
         <div className="relative grid grid-cols-3 gap-8">
           <div className="col-span-1">
             <h1 className="text-xl font-bold mb-4">Contáctanos</h1>

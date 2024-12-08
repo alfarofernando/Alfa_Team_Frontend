@@ -6,16 +6,9 @@ import "./styles/Rain.css";
 import "./styles/fullBackground.css";
 
 export default function App() {
-  const { darkMode } = useContext(ThemeContext);
-
   return (
-    <div
-      className={`full-background scroll-background ${
-        darkMode ? "dark-mode" : "light-mode"
-      }`}
-    >
+    <div className={`bg-gray-100 full-background scroll-background`}>
       <Navbar />
-      
       <AppRouter />
     </div>
   );

@@ -10,11 +10,18 @@ import { BrowserRouter } from "react-router-dom";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
+      <UserAuthProvider>
+        <App />
+      </UserAuthProvider>
+    </BrowserRouter>
+  </StrictMode>
+);
+/* <StrictMode>
+    <BrowserRouter>
+      <ThemeProvider> --habilita el modo oscuro
         <UserAuthProvider>
           <App />
         </UserAuthProvider>
       </ThemeProvider>
     </BrowserRouter>
-  </StrictMode>
-);
+  </StrictMode> */
